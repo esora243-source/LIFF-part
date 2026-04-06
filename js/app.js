@@ -23,6 +23,11 @@ const APP_CONFIG = {
   appName: 'Hugmeid',
   version: '1.0.0-phase1',
   liffId: 'LIFF_ID_PLACEHOLDER', // 本番では実際のLIFF IDに置換
+<<<<<<< HEAD
+=======
+  supabaseUrl: 'https://viroweaudljvwbrewstc.supabase.co',
+  supabaseAnonKey: 'sb_publishable_hhssWdxzMpc_VQrSWmgw1A_BACfAOMY',
+>>>>>>> c25eb19 (feat: マイページをWebアプリ化し、Supabase統合)
   isDev: true, // 開発モード (LIFFモック使用)
 };
 
@@ -83,9 +88,68 @@ const AppState = {
 };
 
 // ============================================================
+<<<<<<< HEAD
 // LIFF モック / 実装
 // ============================================================
 
+=======
+// Supabase サービス
+// ============================================================
+
+const SupabaseService = {
+  client: null,
+  
+  init() {
+    this.client = window.supabase.createClient(APP_CONFIG.supabaseUrl, APP_CONFIG.supabaseAnonKey);
+  },
+  
+  async signInWithLine(lineUser) {
+    // LINE UIDでSupabase Authにサインイン（カスタム認証）
+    // 実際の実装では、サーバーサイドでLINEトークンを検証してSupabase JWTを発行
+    // ここではモック: localStorageにセッション情報を保存
+    try {
+      // 既存ユーザーを検索または作成
+      let { data: user, error } = await this.client
+        .from('users')
+        .select('*')
+        .eq('line_uid', lineUser.userId)
+        .single();
+      
+      if (error && error.code !== 'PGRST116') throw error; // PGRST116は見つからない
+      
+      if (!user) {
+        // 新規ユーザー作成
+        const { data: newUser, error: insertError } = await this.client
+          .from('users')
+          .insert([{
+            line_uid: lineUser.userId,
+            name: lineUser.displayName,
+            avatar_url: lineUser.pictureUrl,
+          }])
+          .select()
+          .single();
+        
+        if (insertError) throw insertError;
+        user = newUser;
+      }
+      
+      // モックセッションをlocalStorageに保存
+      const mockSession = {
+        user: { id: user.id, email: user.line_uid + '@line.local' },
+        access_token: 'mock_token_' + user.id,
+        refresh_token: 'mock_refresh_' + user.id,
+      };
+      localStorage.setItem('supabase.auth.token', JSON.stringify(mockSession));
+      
+      return user;
+    } catch (err) {
+      console.error('Supabaseサインインエラー:', err);
+      return null;
+    }
+  },
+};
+
+>>>>>>> c25eb19 (feat: マイページをWebアプリ化し、Supabase統合)
 const LiffService = {
   initialized: false,
   
@@ -1213,6 +1277,14 @@ async function initAuth() {
     return;
   }
   
+<<<<<<< HEAD
+=======
+  // Supabaseサインイン (マイページ用)
+  if (AppState.user) {
+    await SupabaseService.signInWithLine(AppState.user);
+  }
+  
+>>>>>>> c25eb19 (feat: マイページをWebアプリ化し、Supabase統合)
   // ブックマーク取得
   if (AppState.dbUser) {
     try {
@@ -1269,6 +1341,12 @@ async function skipRegisterForDemo() {
 async function initApp() {
   console.log(`🚀 ${APP_CONFIG.appName} v${APP_CONFIG.version} 起動`);
   
+<<<<<<< HEAD
+=======
+  // Supabase初期化
+  SupabaseService.init();
+  
+>>>>>>> c25eb19 (feat: マイページをWebアプリ化し、Supabase統合)
   // イベントリスナー設定
   setupEventListeners();
   
@@ -1283,7 +1361,14 @@ function setupEventListeners() {
   document.getElementById('nav-school')?.addEventListener('click', () => Router.navigate('school'));
   document.getElementById('nav-extra')?.addEventListener('click', () => Router.navigate('extracurricular'));
   document.getElementById('nav-connections')?.addEventListener('click', () => Router.navigate('connections'));
+<<<<<<< HEAD
   document.getElementById('nav-mypage')?.addEventListener('click', () => Router.navigate('mypage'));
+=======
+  document.getElementById('nav-mypage')?.addEventListener('click', () => {
+    // マイページをWebアプリとして開く
+    window.open('mypage.html', '_blank');
+  });
+>>>>>>> c25eb19 (feat: マイページをWebアプリ化し、Supabase統合)
   
   // 求人検索
   document.getElementById('jobs-search-input')?.addEventListener('input', (e) => {

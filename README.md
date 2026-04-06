@@ -18,7 +18,9 @@
 - 🎓 学校生活・勉強記事（CBT・国試対策）
 - 🌟 課外活動・留学・学生団体情報
 - 🤝 つながり・FAQ・お問い合わせ
-- 👤 マイページ・プロフィール編集
+<<<<<<< HEAD
+- 👤 **マイページ（Webアプリ）**・プロフィール編集
+>>>>>>> c25eb19 (feat: マイページをWebアプリ化し、Supabase統合)
 
 ---
 
@@ -27,6 +29,7 @@
 ```
 /
 ├── index.html              ← メインエントリーポイント (SPA)
+├── mypage.html             ← **マイページWebアプリ** (Supabase Auth)
 ├── css/
 │   └── style.css           ← アプリ全体のスタイル (CSS Variables ベース)
 ├── js/
@@ -41,7 +44,22 @@
 
 ---
 
+<<<<<<< HEAD
 ## 📱 画面一覧 / URIマッピング
+=======
+## � 最新変更 (2024-04-XX)
+
+### マイページのWebアプリ化
+- **変更内容**: マイページをLIFF内から独立したWebアプリに変更
+- **実装**: 
+  - 新規ファイル `mypage.html` を作成 (Supabase Auth + REST API)
+  - LIFFアプリのマイページナビゲーションを `mypage.html` への外部リンクに変更
+  - Supabase SDKを追加し、LINE UIDベースの認証を実装
+- **理由**: リッチメニューからLIFFを起動し、マイページをLINE外のWebアプリとして提供するため
+- **注意**: Supabase URL/キーを実際のプロジェクトに置き換えが必要です
+
+---
+>>>>>>> c25eb19 (feat: マイページをWebアプリ化し、Supabase統合)
 
 | 画面名 | ページID | 説明 |
 |--------|----------|------|
@@ -209,7 +227,11 @@
 3. **Vercel デプロイ**
    ```
    - Production: hugmeid.vercel.app (main ブランチ)
+<<<<<<< HEAD
    - Development: hugmeid-dev.vercel.app (develop ブランチ)
+=======
+   - Development: hugmeid-dev.vercel.app (main ブランチ)
+>>>>>>> c25eb19 (feat: マイページをWebアプリ化し、Supabase統合)
    - 環境変数: NEXT_PUBLIC_LIFF_ID, SUPABASE_URL, SUPABASE_ANON_KEY
    ```
 

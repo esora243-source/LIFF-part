@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Hugmeid - マイページ">
+  <title>Hugmeid - マイページ</title>
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+  
+  <!-- Supabase CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  
+  <!-- アプリスタイル -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div id="app">
+
+  <!-- ============================================================
+       ページ: マイページ
+  ============================================================ -->
+  <div id="page-mypage" class="page active">
+    <div class="mypage-container">
+      <header class="mypage-header">
+        <div class="mypage-avatar" id="mypage-avatar">
+          <!-- アバター画像またはイニシャル -->
+        </div>
+        <div class="mypage-info">
+          <h1 class="mypage-name" id="mypage-name">読み込み中...</h1>
+          <p class="mypage-meta" id="mypage-meta"></p>
+        </div>
+      </header>
+      
+      <div class="mypage-content">
+        <section class="mypage-section">
+          <h2>プロフィール詳細</h2>
+          <div id="mypage-profile-detail">
+            <!-- プロフィール情報 -->
+          </div>
+        </section>
+        
+        <section class="mypage-section">
+          <h2>ブックマーク</h2>
+          <div class="bookmark-stats">
+            <div class="stat-item">
+              <span class="stat-number" id="mypage-bookmark-count">0</span>
+              <span class="stat-label">件</span>
+            </div>
+          </div>
+          <a href="#" class="btn btn-primary" id="view-bookmarks-btn">ブックマークを見る</a>
+        </section>
+        
+        <section class="mypage-section">
+          <h2>設定</h2>
+          <button class="btn btn-secondary" id="edit-profile-btn">プロフィールを編集</button>
+          <button class="btn btn-outline" id="logout-btn">ログアウト</button>
+        </section>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// Supabase設定
+const SUPABASE_URL = 'https://viroweaudljvwbrewstc.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_hhssWdxzMpc_VQrSWmgw1A_BACfAOMY';
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// アプリケーション状態
+let currentUser = null;
+let userProfile = null;
+
+// 初期化
+async function init() {
+  // モックセッションをチェック
+  const mockSession = localStorage.getItem('supabase.auth.token');
+  if (!mockSession) {
+    // 未ログインの場合、ログイン画面にリダイレクト
+    window.location.href = 'index.html'; // またはログインURL
+    return;
+  }
+  
+  const session = JSON.parse(mockSession);
+  currentUser = session.user;
+  await loadUserProfile();
+  renderPage();
+}
+
+// ユーザープロフィール読み込み
+async function loadUserProfile() {
+  try {
+    const { data, error } = await supabase
+      .from('users')
+      .select('*')
+      .eq('id', currentUser.id)
+      .single();
+    
+    if (error) throw error;
+    userProfile = data;
+  } catch (err) {
+    console.error('プロフィール読み込みエラー:', err);
+  }
+}
+
+// ブックマーク数読み込み
+async function loadBookmarkCount() {
+  try {
+    const { count, error } = await supabase
+      .from('bookmarks')
+      .select('*', { count: 'exact', head: true })
+      .eq('user_id', currentUser.id);
+    
+    if (error) throw error;
+    return count || 0;
+  } catch (err) {
+    console.error('ブックマーク数読み込みエラー:', err);
+    return 0;
+  }
+}
+
+// ページレンダリング
+async function renderPage() {
+  if (!userProfile) return;
+  
+  // アバター
+  const avatarEl = document.getElementById('mypage-avatar');
+  const avatarUrl = userProfile.avatar_url;
+  if (avatarUrl) {
+    avatarEl.innerHTML = `<img src="${avatarUrl}" alt="アバター" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
+  } else {
+    const initial = (userProfile.name || 'G').charAt(0);
+    avatarEl.innerHTML = `<span class="avatar-initial">${initial}</span>`;
+  }
+  
+  // 名前
+  document.getElementById('mypage-name').textContent = userProfile.name || 'ゲスト';
+  
+  // メタ情報
+  const metaEl = document.getElementById('mypage-meta');
+  const parts = [];
+  if (userProfile.university) parts.push(userProfile.university);
+  if (userProfile.grade) parts.push(`${userProfile.grade}年生`);
+  metaEl.textContent = parts.join(' ') || '未設定';
+  
+  // プロフィール詳細
+  renderProfileDetail();
+  
+  // ブックマーク数
+  const bookmarkCount = await loadBookmarkCount();
+  document.getElementById('mypage-bookmark-count').textContent = bookmarkCount;
+}
+
+// プロフィール詳細レンダリング
+function renderProfileDetail() {
+  const el = document.getElementById('mypage-profile-detail');
+  if (!el || !userProfile) return;
+  
+  const grade_labels = ['', '1年生', '2年生', '3年生', '4年生', '5年生', '6年生'];
+  const gender_labels = { male: '男性', female: '女性', other: 'その他' };
+  
+  el.innerHTML = `
+    <div class="info-list">
+      <div class="info-item">
+        <span class="info-label">大学</span>
+        <span class="info-value">${userProfile.university || '未設定'}</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">学年</span>
+        <span class="info-value">${grade_labels[userProfile.grade] || '未設定'}</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">性別</span>
+        <span class="info-value">${gender_labels[userProfile.gender] || '未設定'}</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">部活・サークル</span>
+        <span class="info-value">${userProfile.club || '未設定'}</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">希望診療科</span>
+        <span class="info-value">${userProfile.desired_dept || '未設定'}</span>
+      </div>
+    </div>
+  `;
+}
+
+// イベントリスナー
+document.getElementById('logout-btn').addEventListener('click', async () => {
+  localStorage.removeItem('supabase.auth.token');
+  window.location.href = 'index.html';
+});
+
+document.getElementById('view-bookmarks-btn').addEventListener('click', () => {
+  // ブックマークページへ（未実装）
+  alert('ブックマークページは未実装です');
+});
+
+document.getElementById('edit-profile-btn').addEventListener('click', () => {
+  // プロフィール編集ページへ（未実装）
+  alert('プロフィール編集は未実装です');
+});
+
+// 初期化実行
+init();
+</script>
+
+</body>
+</html>

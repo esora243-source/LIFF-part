@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="description" content="Hugmeid - 医学生のためのキャリア・学習・つながりプラットフォーム">
+  <meta name="theme-color" content="#06C755">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  
+  <!-- OGP -->
+  <meta property="og:title" content="Hugmeid - 医学生プラットフォーム">
+  <meta property="og:description" content="医学生のためのキャリア・学習・つながりプラットフォーム">
+  <meta property="og:type" content="website">
+  
+  <title>Hugmeid - 医学生プラットフォーム</title>
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+  
+  <!-- アプリスタイル -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div id="app">
+
+  <!-- ============================================================
+       ページ: ログイン
+  ============================================================ -->
+  <div id="page-login" class="page active">
+    <div class="auth-page">
+      <div class="auth-logo">
+        <div class="logo-mark">🩺</div>
+        <div class="logo-text">Hugmeid</div>
+        <div class="logo-desc">医学生のためのキャリア・学習プラットフォーム</div>
+      </div>
+      
+      <div class="auth-card">
+        <h2 class="auth-title">ログイン</h2>
+        <p class="auth-subtitle">
+          LINEアカウントでログインして<br>
+          Hugmeidの全機能を使いましょう
+        </p>
+        
+        <button id="line-login-btn" class="line-login-btn" onclick="handleLineLogin()">
+          <svg class="line-icon" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+            <path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63h2.386c.346 0 .627.285.627.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.494.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63.346 0 .628.285.628.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.281.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/>
+          </svg>
+          LINEでログイン
+        </button>
+        
+        <div style="margin-top: 20px; text-align: center; font-size: 0.75rem; color: var(--color-text-muted); line-height: 1.6;">
+          ログインすることで、<a href="#" style="color:var(--color-primary)">利用規約</a>と
+          <a href="#" style="color:var(--color-primary)">プライバシーポリシー</a>に同意したものとみなします
+        </div>
+        
+        <!-- 開発モード案内 -->
+        <div style="margin-top:24px;padding:12px;background:var(--color-primary-light);border-radius:var(--radius-md);font-size:0.78rem;color:var(--color-primary-dark);">
+          <strong>🔧 デモモード</strong><br>
+          本番ではLINE LIFFで動作します。<br>
+          上のボタンを押すとモックログインできます。
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       ページ: ユーザー登録
+  ============================================================ -->
+  <div id="page-register" class="page">
+    <div class="top-nav">
+      <div class="nav-logo">🩺 Hugmeid</div>
+      <div class="nav-title">プロフィール登録</div>
+    </div>
+    
+    <div class="page-content">
+      <div class="register-header">
+        <h1>プロフィールを登録しましょう</h1>
+        <p>あなたに合った求人・情報をお届けするために、基本情報を教えてください</p>
+      </div>
+      
+      <!-- ステップインジケーター -->
+      <div class="step-indicator">
+        <div class="step active"></div>
+        <div class="step"></div>
+      </div>
+      
+      <div id="register-form-area">
+        <form id="register-form" class="container" style="padding-top:16px;padding-bottom:32px;" onsubmit="return false;">
+          
+          <!-- ステップ1: 基本情報 -->
+          <div id="register-step-1" class="register-step">
+            <p class="text-muted mb-md" style="font-size:0.85rem;">ステップ 1/2 — 基本情報</p>
+            
+            <div class="form-group">
+              <label class="form-label">性別 <span class="required">*</span></label>
+              <select name="gender" class="form-control" required>
+                <option value="">選択してください</option>
+                <option value="male">男性</option>
+                <option value="female">女性</option>
+                <option value="other">その他・回答しない</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">学年 <span class="required">*</span></label>
+              <select name="grade" class="form-control" required>
+                <option value="">選択してください</option>
+                <option value="1">1年生</option>
+                <option value="2">2年生</option>
+                <option value="3">3年生</option>
+                <option value="4">4年生</option>
+                <option value="5">5年生</option>
+                <option value="6">6年生</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">大学名 <span class="required">*</span></label>
+              <input type="text" name="university" class="form-control" 
+                     placeholder="例: 浜松医科大学" required
+                     value="浜松医科大学">
+            </div>
+            
+            <button type="button" class="btn btn-primary btn-full btn-lg" 
+                    onclick="PageControllers.register.next()">
+              次へ →
+            </button>
+          </div>
+          
+          <!-- ステップ2: 詳細情報 -->
+          <div id="register-step-2" class="register-step" style="display:none;">
+            <p class="text-muted mb-md" style="font-size:0.85rem;">ステップ 2/2 — 詳細情報（任意）</p>
+            
+            <div class="form-group">
+              <label class="form-label">部活・サークル</label>
+              <input type="text" name="club" class="form-control" 
+                     placeholder="例: バレーボール部、医学生起業研究会">
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">希望診療科</label>
+              <input type="text" name="desired_dept" class="form-control" 
+                     placeholder="例: 内科、外科、小児科">
+            </div>
+            
+            <div style="display:flex;gap:12px;">
+              <button type="button" class="btn btn-ghost" style="flex:1;" 
+                      onclick="PageControllers.register.prev()">
+                ← 戻る
+              </button>
+              <button type="button" class="btn btn-primary" style="flex:2;" 
+                      onclick="PageControllers.register.submit()">
+                登録完了 🎉
+              </button>
+            </div>
+            
+            <button type="button" class="btn btn-ghost btn-full mt-sm" style="font-size:0.8rem;"
+                    onclick="skipRegisterForDemo()">
+              スキップして始める（デモ）
+            </button>
+          </div>
+          
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       ページ: ホーム
+  ============================================================ -->
+  <div id="page-home" class="page">
+    <div class="top-nav">
+      <div class="nav-logo">🩺 Hugmeid</div>
+      <div class="nav-actions">
+        <button class="nav-icon-btn" onclick="Router.navigate('bookmarks')" title="ブックマーク">⭐</button>
+        <button class="nav-icon-btn" onclick="Router.navigate('mypage')" title="マイページ">👤</button>
+      </div>
+    </div>
+    
+    <div class="page-content">
+      <!-- ヒーローバナー -->
+      <div class="hero-banner">
+        <div class="hero-content container">
+          <p class="hero-greeting" id="hero-greeting">こんにちは、</p>
+          <h1 class="hero-name" id="hero-name">医学 太郎 さん</h1>
+          <p class="hero-subtitle" id="hero-subtitle">浜松医科大学 3年生</p>
+        </div>
+      </div>
+      
+      <div class="container">
+        <!-- お知らせ -->
+        <div style="padding-top:var(--spacing-lg);">
+          <div class="notice-banner">
+            <span class="notice-icon">📢</span>
+            <span class="notice-text">
+              <strong>Phase 1 公開中！</strong> 浜松医科大学向けのサービスを提供しています。フィードバックをお待ちしています。
+            </span>
+          </div>
+        </div>
+        
+        <!-- メニューグリッド -->
+        <div class="section-header">
+          <h2 class="section-title">メニュー</h2>
+        </div>
+        
+        <div class="menu-grid">
+          <div class="menu-item" onclick="Router.navigate('jobs')">
+            <div class="menu-icon" style="background:linear-gradient(135deg,#d0f2e0,#06C755);">💼</div>
+            <span class="menu-label">求人・<br>アルバイト</span>
+          </div>
+          <div class="menu-item" onclick="Router.navigate('school')">
+            <div class="menu-icon" style="background:linear-gradient(135deg,#dbeafe,#3b82f6);">🎓</div>
+            <span class="menu-label">学校・<br>勉強</span>
+          </div>
+          <div class="menu-item" onclick="Router.navigate('extracurricular')">
+            <div class="menu-icon" style="background:linear-gradient(135deg,#fef3c7,#f59e0b);">🌟</div>
+            <span class="menu-label">課外<br>活動</span>
+          </div>
+          <div class="menu-item" onclick="Router.navigate('connections')">
+            <div class="menu-icon" style="background:linear-gradient(135deg,#f5f3ff,#8b5cf6);">🤝</div>
+            <span class="menu-label">つながり・<br>相談</span>
+          </div>
+          <div class="menu-item" onclick="Router.navigate('bookmarks')">
+            <div class="menu-icon" style="background:linear-gradient(135deg,#fffbeb,#f59e0b);">⭐</div>
+            <span class="menu-label">ブック<br>マーク</span>
+          </div>
+          <div class="menu-item" onclick="Router.navigate('mypage')">
+            <div class="menu-icon" style="background:linear-gradient(135deg,#fce7f3,#ec4899);">👤</div>
+            <span class="menu-label">マイ<br>ページ</span>
+          </div>
+        </div>
+        
+        <!-- 新着求人 -->
+        <div class="section-header">
+          <h2 class="section-title">新着求人</h2>
+          <span class="section-more" onclick="Router.navigate('jobs')">もっと見る ›</span>
+        </div>
+        
+        <div id="home-job-list" style="display:flex;flex-direction:column;gap:var(--spacing-sm);">
+          <div class="loading-spinner"><div class="spinner"></div><span>読み込み中...</span></div>
+        </div>
+        
+        <!-- 新着記事 -->
+        <div class="section-header">
+          <h2 class="section-title">新着記事</h2>
+          <span class="section-more" onclick="Router.navigate('school')">もっと見る ›</span>
+        </div>
+        
+        <div id="home-article-list" style="margin-bottom:var(--spacing-lg);">
+          <div class="loading-spinner"><div class="spinner"></div><span>読み込み中...</span></div>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       ページ: 求人一覧
+  ============================================================ -->
+  <div id="page-jobs" class="page">
+    <div class="top-nav">
+      <button class="nav-back" onclick="Router.navigate('home')">‹</button>
+      <div class="nav-title">求人・アルバイト</div>
+      <span id="jobs-count" style="font-size:0.8rem;color:var(--color-text-muted);">0件</span>
+    </div>
+    
+    <div class="page-content">
+      <div class="container" style="padding-top:var(--spacing-md);">
+        
+        <!-- 検索バー -->
+        <div class="search-bar mb-md">
+          <span class="search-icon">🔍</span>
+          <input id="jobs-search-input" type="search" placeholder="職種・会社名で検索...">
+        </div>
+        
+        <!-- フィルタータブ -->
+        <div id="jobs-filter-tabs" class="filter-tabs mb-md">
+          <button class="filter-tab active" data-category="all">すべて</button>
+          <button class="filter-tab" data-category="家庭教師">📚 家庭教師</button>
+          <button class="filter-tab" data-category="オンライン家庭教師">💻 オンライン</button>
+          <button class="filter-tab" data-category="塾講師">🏫 塾</button>
+          <button class="filter-tab" data-category="ITインターン">🖥️ ITインターン</button>
+          <button class="filter-tab" data-category="飲食・医療事務">🏥 医療事務</button>
+          <button class="filter-tab" data-category="その他">💼 その他</button>
+        </div>
+        
+        <!-- 求人リスト -->
+        <div id="jobs-list-container" style="display:flex;flex-direction:column;gap:var(--spacing-sm);">
+          <div class="loading-spinner"><div class="spinner"></div><span>読み込み中...</span></div>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       ページ: 求人詳細
+  ============================================================ -->
+  <div id="page-job-detail" class="page">
+    <div class="top-nav">
+      <button class="nav-back" onclick="Router.navigate('jobs')">‹</button>
+      <div class="nav-title">求人詳細</div>
+      <button class="nav-icon-btn" onclick="if(AppState.selectedJob){navigator.clipboard?.writeText(location.href);showToast('URLをコピーしました')}" title="共有">🔗</button>
+    </div>
+    
+    <div class="page-content">
+      <!-- ヘッダー情報 -->
+      <div class="detail-header">
+        <div class="detail-meta" id="job-detail-meta">
+          <!-- JSで挿入 -->
+        </div>
+        <h1 class="detail-title" id="job-detail-title">求人タイトル</h1>
+        <div class="detail-company">
+          <span>🏢</span>
+          <span id="job-detail-company">会社名</span>
+        </div>
+      </div>
+      
+      <div class="container" style="padding-top:var(--spacing-md);">
+        
+        <!-- 給与情報 -->
+        <div style="background:var(--color-primary-light);border-radius:var(--radius-lg);padding:var(--spacing-md);margin-bottom:var(--spacing-md);display:flex;align-items:center;gap:8px;">
+          <span style="font-size:1.2rem;">💰</span>
+          <div>
+            <div style="font-size:0.75rem;color:var(--color-primary-dark);font-weight:600;">給与・時給</div>
+            <div id="job-detail-salary" style="font-size:1.1rem;font-weight:700;color:var(--color-primary-dark);"></div>
+          </div>
+        </div>
+        
+        <!-- 業務内容 -->
+        <div class="card mb-md">
+          <div class="card-body">
+            <h3 style="font-size:0.9rem;font-weight:700;margin-bottom:var(--spacing-sm);color:var(--color-text-secondary);">📋 業務内容・詳細</h3>
+            <p id="job-detail-description" style="font-size:0.9rem;line-height:1.8;color:var(--color-text-secondary);"></p>
+          </div>
+        </div>
+        
+        <!-- アクションボタン -->
+        <div style="display:flex;flex-direction:column;gap:var(--spacing-sm);padding-bottom:var(--spacing-xl);">
+          <button id="job-detail-bookmark-btn" class="btn btn-outline btn-lg btn-full"
+                  onclick="PageControllers['job-detail'].toggleBookmark(AppState.selectedJob)">
+            ☆ ブックマーク
+          </button>
+          <a id="job-detail-apply-btn" href="#" target="_blank" 
+             class="btn btn-primary btn-lg btn-full" style="display:none;">
+            🚀 応募ページへ
+          </a>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       ページ: 学校生活
+  ============================================================ -->
+  <div id="page-school" class="page">
+    <div class="top-nav">
+      <button class="nav-back" onclick="Router.navigate('home')">‹</button>
+      <div class="nav-title">🎓 学校・勉強</div>
+    </div>
+    
+    <div class="page-content">
+      <div class="container">
+        
+        <!-- 機能カード -->
+        <div class="section-header">
+          <h2 class="section-title">学習ツール</h2>
+        </div>
+        
+        <div class="scroll-grid" style="margin-bottom:var(--spacing-lg);">
+          <div class="card" style="cursor:pointer;" onclick="showToast('時間割機能は準備中です (Phase 1)')">
+            <div class="card-body" style="text-align:center;">
+              <div style="font-size:2rem;margin-bottom:8px;">📅</div>
+              <div style="font-size:0.85rem;font-weight:700;">時間割</div>
+              <div style="font-size:0.72rem;color:var(--color-text-muted);margin-top:4px;">OCR対応準備中</div>
+            </div>
+          </div>
+          <div class="card" style="cursor:pointer;" onclick="showToast('CBT対策機能は Phase 2 で実装予定です')">
+            <div class="card-body" style="text-align:center;">
+              <div style="font-size:2rem;margin-bottom:8px;">📝</div>
+              <div style="font-size:0.85rem;font-weight:700;">CBT対策</div>
+              <div style="font-size:0.72rem;color:var(--color-text-muted);margin-top:4px;">Phase 2 実装予定</div>
+            </div>
+          </div>
+          <div class="card" style="cursor:pointer;" onclick="showToast('国試過去問機能は Phase 2 で実装予定です')">
+            <div class="card-body" style="text-align:center;">
+              <div style="font-size:2rem;margin-bottom:8px;">🏆</div>
+              <div style="font-size:0.85rem;font-weight:700;">国試過去問</div>
+              <div style="font-size:0.72rem;color:var(--color-text-muted);margin-top:4px;">Phase 2 実装予定</div>
+            </div>
+          </div>
+          <div class="card" style="cursor:pointer;" onclick="showToast('研修病院紹介機能は Phase 2 で実装予定です')">
+            <div class="card-body" style="text-align:center;">
+              <div style="font-size:2rem;margin-bottom:8px;">🏥</div>
+              <div style="font-size:0.85rem;font-weight:700;">研修病院</div>
+              <div style="font-size:0.72rem;color:var(--color-text-muted);margin-top:4px;">Phase 2 実装予定</div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 勉強記事 -->
+        <div class="section-header">
+          <h2 class="section-title">勉強・学習記事</h2>
+        </div>
+        
+        <div id="school-articles-container">
+          <div class="loading-spinner"><div class="spinner"></div><span>読み込み中...</span></div>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       ページ: 課外活動
+  ============================================================ -->
+  <div id="page-extracurricular" class="page">
+    <div class="top-nav">
+      <button class="nav-back" onclick="Router.navigate('home')">‹</button>
+      <div class="nav-title">🌟 課外活動</div>
+    </div>
+    
+    <div class="page-content">
+      <div class="container">
+        
+        <!-- 留学情報 -->
+        <div class="section-header">
+          <h2 class="section-title">留学・海外経験</h2>
+        </div>
+        
+        <div class="notice-banner mb-md">
+          <span class="notice-icon">✈️</span>
+          <div class="notice-text">
+            <strong>野口医学研究所</strong>などの海外プログラム情報を掲載しています。
+          </div>
+        </div>
+        
+        <!-- 課外活動記事 -->
+        <div class="section-header">
+          <h2 class="section-title">活動レポート</h2>
+        </div>
+        
+        <div id="extra-articles-container" style="margin-bottom:var(--spacing-lg);">
+          <div class="loading-spinner"><div class="spinner"></div><span>読み込み中...</span></div>
+        </div>
+        
+        <!-- 団体一覧 -->
+        <div class="section-header">
+          <h2 class="section-title">学生団体・サークル</h2>
+        </div>
+        
+        <div id="extra-orgs-container" style="display:flex;flex-direction:column;gap:var(--spacing-sm);margin-bottom:var(--spacing-lg);">
+          <div class="loading-spinner"><div class="spinner"></div><span>読み込み中...</span></div>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       ページ: つながり / コネクション
+  ============================================================ -->
+  <div id="page-connections" class="page">
+    <div class="top-nav">
+      <button class="nav-back" onclick="Router.navigate('home')">‹</button>
+      <div class="nav-title">🤝 つながり・相談</div>
+    </div>
+    
+    <div class="page-content">
+      <div class="container">
+        
+        <div style="padding-top:var(--spacing-lg);">
+          <div class="notice-banner mb-lg">
+            <span class="notice-icon">💡</span>
+            <div class="notice-text">
+              お問い合わせ・相談はLINE公式アカウントからも受け付けています。
+            </div>
+          </div>
+        </div>
+        
+        <!-- FAQ -->
+        <div class="section-header">
+          <h2 class="section-title">よくある質問 (FAQ)</h2>
+        </div>
+        
+        <div class="faq-item">
+          <div class="faq-question">
+            <span class="faq-q">Q</span>
+            Hugmeidはどんなサービスですか？
+            <span class="faq-arrow">▼</span>
+          </div>
+          <div class="faq-answer">
+            Hugmeidは医学生向けのキャリア・学習・つながりプラットフォームです。医学生に特化した求人情報、CBT・国試対策の学習コンテンツ、課外活動・留学情報、学生同士のコミュニティ機能を提供しています。
+          </div>
+        </div>
+        
+        <div class="faq-item">
+          <div class="faq-question">
+            <span class="faq-q">Q</span>
+            利用料金はかかりますか？
+            <span class="faq-arrow">▼</span>
+          </div>
+          <div class="faq-answer">
+            現在（Phase 1）は完全無料でご利用いただけます。将来的にプレミアム機能の追加を検討していますが、基本機能は無料を継続予定です。
+          </div>
+        </div>
+        
+        <div class="faq-item">
+          <div class="faq-question">
+            <span class="faq-q">Q</span>
+            対象の大学はどこですか？
+            <span class="faq-arrow">▼</span>
+          </div>
+          <div class="faq-answer">
+            Phase 1では浜松医科大学の学生を対象としています。Phase 2では全国の医学部・医科大学への展開を予定しています。
+          </div>
+        </div>
+        
+        <div class="faq-item">
+          <div class="faq-question">
+            <span class="faq-q">Q</span>
+            求人に応募するにはどうすればいいですか？
+            <span class="faq-arrow">▼</span>
+          </div>
+          <div class="faq-answer">
+            求人詳細ページの「応募ページへ」ボタンから各企業の採用ページに遷移します。応募手続きは各企業のページで行ってください。ご不明な点はお問い合わせフォームよりご連絡ください。
+          </div>
+        </div>
+        
+        <div class="faq-item">
+          <div class="faq-question">
+            <span class="faq-q">Q</span>
+            LINEアカウントでしかログインできませんか？
+            <span class="faq-arrow">▼</span>
+          </div>
+          <div class="faq-answer">
+            現在はLINEアカウントのみ対応しています。これはLINE LIFF（LINE Front-end Framework）を活用したサービスであるため、LINE連携が基本となります。今後他の認証方法の追加も検討しています。
+          </div>
+        </div>
+        
+        <!-- お問い合わせ -->
+        <div class="section-header">
+          <h2 class="section-title">お問い合わせ</h2>
+        </div>
+        
+        <div class="card mb-lg">
+          <div class="card-body">
+            <p style="font-size:0.9rem;color:var(--color-text-secondary);margin-bottom:var(--spacing-md);line-height:1.6;">
+              ご質問・ご要望・不具合報告はこちらからお願いします。いただいたフィードバックをもとにサービスを改善します。
+            </p>
+            
+            <div class="form-group">
+              <label class="form-label">お問い合わせ種別</label>
+              <select class="form-control" id="inquiry-type">
+                <option value="general">一般的な質問</option>
+                <option value="job">求人について</option>
+                <option value="bug">不具合報告</option>
+                <option value="feature">機能リクエスト</option>
+                <option value="other">その他</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">お問い合わせ内容</label>
+              <textarea id="inquiry-content" class="form-control" rows="4" 
+                        placeholder="お問い合わせ内容を入力してください..."></textarea>
+            </div>
+            
+            <button class="btn btn-primary btn-full" onclick="submitInquiry()">
+              📨 送信する
+            </button>
+          </div>
+        </div>
+        
+        <!-- Phase 2 予告 -->
+        <div style="background:var(--color-primary-light);border-radius:var(--radius-lg);padding:var(--spacing-md);margin-bottom:var(--spacing-lg);">
+          <h3 style="font-size:0.9rem;font-weight:700;color:var(--color-primary-dark);margin-bottom:8px;">🚀 Phase 2 で追加予定</h3>
+          <ul style="font-size:0.82rem;color:var(--color-primary-dark);line-height:1.8;padding-left:16px;list-style:disc;">
+            <li>OB・先輩医師マッチング機能</li>
+            <li>医学生コミュニティ（掲示板）</li>
+            <li>地域別の求人・情報検索</li>
+          </ul>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       ページ: マイページ
+  ============================================================ -->
+  <div id="page-mypage" class="page">
+    <div class="top-nav">
+      <button class="nav-back" onclick="Router.navigate('home')">‹</button>
+      <div class="nav-title">マイページ</div>
+      <button class="nav-icon-btn" onclick="openProfileEditModal()" title="プロフィール編集">✏️</button>
+    </div>
+    
+    <div class="page-content">
+      <div class="container" style="padding-top:var(--spacing-lg);">
+        
+        <!-- プロフィールカード -->
+        <div class="profile-card mb-md">
+          <div class="avatar avatar-lg" id="mypage-avatar" style="margin:0 auto;">G</div>
+          <div class="user-name" id="mypage-name">ゲスト</div>
+          <div class="user-meta" id="mypage-meta">未設定</div>
+        </div>
+        
+        <!-- プロフィール詳細 -->
+        <div class="card mb-md">
+          <div class="card-body">
+            <h3 style="font-size:0.9rem;font-weight:700;margin-bottom:var(--spacing-sm);">📋 プロフィール詳細</h3>
+            <div id="mypage-profile-detail">
+              <p style="font-size:0.85rem;color:var(--color-text-muted);">プロフィールを登録してください</p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- メニュー -->
+        <div class="card mb-md">
+          <div style="border-bottom:1px solid var(--color-border);">
+            <button class="w-full" style="padding:var(--spacing-md);display:flex;align-items:center;gap:var(--spacing-md);background:none;border:none;cursor:pointer;font-family:var(--font-family);"
+                    onclick="Router.navigate('bookmarks')">
+              <span style="font-size:1.2rem;">⭐</span>
+              <span style="flex:1;text-align:left;font-size:0.9rem;font-weight:600;">ブックマーク済み求人</span>
+              <span id="mypage-bookmark-count" style="background:var(--color-primary);color:white;padding:2px 8px;border-radius:var(--radius-full);font-size:0.75rem;font-weight:700;">0</span>
+              <span style="color:var(--color-text-muted);">›</span>
+            </button>
+          </div>
+          <div style="border-bottom:1px solid var(--color-border);">
+            <button class="w-full" style="padding:var(--spacing-md);display:flex;align-items:center;gap:var(--spacing-md);background:none;border:none;cursor:pointer;font-family:var(--font-family);"
+                    onclick="showToast('通知設定は Phase 2 で実装予定です')">
+              <span style="font-size:1.2rem;">🔔</span>
+              <span style="flex:1;text-align:left;font-size:0.9rem;font-weight:600;">通知設定</span>
+              <span style="color:var(--color-text-muted);">›</span>
+            </button>
+          </div>
+          <div>
+            <button class="w-full" style="padding:var(--spacing-md);display:flex;align-items:center;gap:var(--spacing-md);background:none;border:none;cursor:pointer;font-family:var(--font-family);color:var(--color-accent-red);"
+                    onclick="handleLogout()">
+              <span style="font-size:1.2rem;">🚪</span>
+              <span style="flex:1;text-align:left;font-size:0.9rem;font-weight:600;">ログアウト</span>
+            </button>
+          </div>
+        </div>
+        
+        <!-- バージョン情報 -->
+        <p style="text-align:center;font-size:0.72rem;color:var(--color-text-muted);margin-bottom:var(--spacing-lg);">
+          Hugmeid v1.0.0 (Phase 1 Beta)<br>
+          © 2025 Cross Medicine Co., Ltd.
+        </p>
+        
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       ページ: ブックマーク
+  ============================================================ -->
+  <div id="page-bookmarks" class="page">
+    <div class="top-nav">
+      <button class="nav-back" onclick="Router.navigate('mypage')">‹</button>
+      <div class="nav-title">⭐ ブックマーク</div>
+    </div>
+    
+    <div class="page-content">
+      <div class="container" style="padding-top:var(--spacing-md);">
+        <div id="bookmarks-container" style="display:flex;flex-direction:column;gap:var(--spacing-sm);">
+          <div class="loading-spinner"><div class="spinner"></div><span>読み込み中...</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       ページ: 記事詳細
+  ============================================================ -->
+  <div id="page-article-detail" class="page">
+    <div class="top-nav">
+      <button class="nav-back" id="article-detail-back-btn" onclick="history.go(-1)">‹</button>
+      <div class="nav-title">記事</div>
+      <button class="nav-icon-btn" onclick="navigator.clipboard?.writeText(location.href);showToast('URLをコピーしました')" title="共有">🔗</button>
+    </div>
+    
+    <div class="page-content">
+      <div id="article-detail-header"><!-- JSで挿入 --></div>
+      <div id="article-detail-img"><!-- JSで挿入 --></div>
+      <div id="article-detail-content"><!-- JSで挿入 --></div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       共通: ボトムナビゲーション
+  ============================================================ -->
+  <nav class="bottom-nav" id="bottom-nav" style="display:none;">
+    <button class="bottom-nav-item" id="nav-home" onclick="Router.navigate('home')">
+      <span class="nav-icon">🏠</span>
+      <span class="nav-label">ホーム</span>
+    </button>
+    <button class="bottom-nav-item" id="nav-jobs" onclick="Router.navigate('jobs')">
+      <span class="nav-icon">💼</span>
+      <span class="nav-label">求人</span>
+    </button>
+    <button class="bottom-nav-item" id="nav-school" onclick="Router.navigate('school')">
+      <span class="nav-icon">🎓</span>
+      <span class="nav-label">勉強</span>
+    </button>
+    <button class="bottom-nav-item" id="nav-extra" onclick="Router.navigate('extracurricular')">
+      <span class="nav-icon">🌟</span>
+      <span class="nav-label">課外</span>
+    </button>
+    <button class="bottom-nav-item" id="nav-mypage" onclick="Router.navigate('mypage')">
+      <span class="nav-icon">👤</span>
+      <span class="nav-label">マイ</span>
+    </button>
+  </nav>
+
+</div><!-- /#app -->
+
+<!-- ============================================================
+     共通: トースト通知
+============================================================ -->
+<div id="toast-container" class="toast-container"></div>
+
+<!-- ============================================================
+     共通: 団体詳細モーダル
+============================================================ -->
+<div id="org-modal-overlay" class="modal-overlay" onclick="if(event.target===this)closeOrgModal()">
+  <div class="modal modal-center" style="max-width:400px;margin:auto 16px;" id="org-modal-content">
+  </div>
+</div>
+
+<!-- ============================================================
+     共通: プロフィール編集モーダル
+============================================================ -->
+<div id="profile-edit-modal" class="modal-overlay" onclick="if(event.target===this)closeProfileEditModal()">
+  <div class="modal" style="max-width:680px;">
+    <div class="modal-header">
+      <span class="modal-close" onclick="closeProfileEditModal()">✕</span>
+      <div class="modal-title">✏️ プロフィール編集</div>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">大学名</label>
+        <input type="text" name="edit-university" class="form-control" placeholder="浜松医科大学">
+      </div>
+      <div class="form-group">
+        <label class="form-label">学年</label>
+        <select name="edit-grade" class="form-control">
+          <option value="1">1年生</option>
+          <option value="2">2年生</option>
+          <option value="3">3年生</option>
+          <option value="4">4年生</option>
+          <option value="5">5年生</option>
+          <option value="6">6年生</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">性別</label>
+        <select name="edit-gender" class="form-control">
+          <option value="">選択しない</option>
+          <option value="male">男性</option>
+          <option value="female">女性</option>
+          <option value="other">その他</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">部活・サークル</label>
+        <input type="text" name="edit-club" class="form-control" placeholder="例: バレーボール部">
+      </div>
+      <div class="form-group">
+        <label class="form-label">希望診療科</label>
+        <input type="text" name="edit-desired_dept" class="form-control" placeholder="例: 内科、外科">
+      </div>
+      <div style="display:flex;gap:12px;">
+        <button class="btn btn-ghost" style="flex:1;" onclick="closeProfileEditModal()">キャンセル</button>
+        <button id="save-profile-btn" class="btn btn-primary" style="flex:2;">💾 保存する</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     スクリプト
+============================================================ -->
+
+<!-- LINE LIFF SDK (本番では有効化) -->
+<!-- <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script> -->
+
+<!-- アプリケーション -->
+<script src="js/app.js"></script>
+
+<!-- お問い合わせ送信 (インライン) -->
+<script>
+function submitInquiry() {
+  const type = document.getElementById('inquiry-type')?.value;
+  const content = document.getElementById('inquiry-content')?.value;
+  
+  if (!content?.trim()) {
+    showToast('お問い合わせ内容を入力してください', 'error');
+    return;
+  }
+  
+  // 本番ではAPI/Webhook連携
+  console.log('[Inquiry]', { type, content });
+  showToast('お問い合わせを受け付けました。ありがとうございます！', 'success');
+  
+  document.getElementById('inquiry-content').value = '';
+}
+</script>
+
+<!-- FAQ アコーディオン初期化 -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('.faq-question').forEach(function(q) {
+    q.addEventListener('click', function() {
+      q.closest('.faq-item')?.classList.toggle('open');
+    });
+  });
+});
+</script>
+
+</body>
+</html>
